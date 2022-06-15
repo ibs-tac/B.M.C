@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="cheque_management_incoming_sequence" model="ir.sequence">
+        <field name="name">Cheque Management Incoming</field>
+        <field name="code">cheque.management.incoming</field>
+        <field name="prefix">IN-/%(range_year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+        <field name="use_date_range" eval="True"/>
+    </record>
+
+    <record id="cheque_management_outgoing_sequence" model="ir.sequence">
+        <field name="name">Cheque Management Outgoing</field>
+        <field name="code">cheque.management.outgoing</field>
+        <field name="prefix">OUT-/%(range_year)s/</field>
+        <field name="padding">5</field>
+        <field name="number_increment">1</field>
+        <field name="company_id" eval="False"/>
+        <field name="use_date_range" eval="True"/>
+    </record>
+
+    <record id="cheque_management_form" model="ir.ui.view">
+        <field name="name">cheque.management.form</field>
+        <field name="model">cheque.management</field>
+        <field name="arch" type="xml">
+            <form string="Incoming Cheque">
+                <header>
+                    <button name="action_confirm_wizard" string="Confirm" type="object" class="oe_highlight" states="draft"/>
+                    <button name="action_cashed_wizard" string="Cashed" type="object" class="oe_highlight" states="confirm,return_to_partner,return_from_partner"/>
+                    <button name="action_send_to_bank_wizard" string="Send To Bank" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','confirm'),('cheque_type','=','outgoing')]}"/>
+                    <button name="action_in_deposit_wizard" string="Deposit" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','send_to_bank'),('cheque_type','=','outgoing')]}"/>
+                    <button name="action_out_deposit_wizard" string="Deposit" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','confirm'),('cheque_type','=','incoming')]}"/>
+                    <button name="action_in_bounced_wizard" string="Bounced" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','send_to_bank'),('cheque_type','=','outgoing')]}"/>
+                    <button name="action_out_bounced_wizard" string="Bounced" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','confirm'),('cheque_type','=','incoming')]}"/>
+                    <button name="action_return_to_partner_wizard" string="Return To Partner" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','bounced'),('cheque_type','=','outgoing')]}"/>
+                    <button name="action_return_from_partner_wizard" string="Return From Partner" type="object" class="oe_highlight" attrs="{'invisible':['|',('state','!=','bounced'),('cheque_type','=','incoming')]}"/>
+                    <button name="cancel" string="Cancel" type="object" class="oe_highlight" states="confirm"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,confirm,deposit,bounced"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button"
+                                name="action_view_account_move_line"
+                                type="object"
+                                groups="account.group_account_user"
+                                icon="fa-bars" attrs="{'invisible':[('move_line_ids','=',[])]}">
+                            <field name="journal_item_count" widget="statinfo"/>
+                        </button>
+                        <field name="move_line_ids" invisible="1"/>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                        <h3>
+                            <field name="description" placeholder="Description ......."/>
+                        </h3>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_type"/>
+                            <field name="partner_id" options="{'no_create': True}"/>
+                            <field name="amount" invisible="1"/>
+                            <field name="currency_amount" widget="monetary" options="{'currency_field': 'company_currency_id', 'field_digits': True}"/>
+                            <field name="currency_id" options="{'no_open': True, 'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="employee_id" attrs="{'required':[('state','=','send_to_bank')]}"/>
+                            <field name="bank_account_id" options="{'no_open': True, 'no_create': True}" attrs="{'invisible':[('state','in',['draft','confirm']),('cheque_type','=','incoming')]}"/>
+                            <field name="collected_by_another_bank_treasury" options="{'no_open': True, 'no_create': True}" attrs="{'invisible':['|',('state','!=','cashed'),('cheque_type','=','outgoing')]}"/>
+                            <field name="deducted_by_another_bank_treasury" options="{'no_open': True, 'no_create': True}" attrs="{'invisible':['|',('state','!=','cashed'),('cheque_type','=','incoming')]}"/>
+
+                        </group>
+                        <group>
+                            <field name="cheque_number"/>
+                            <field name="check_due_date"/>
+                            <field name="cheque_type" invisible="1"/>
+                            <field name="move_type" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="hand_me_the_check" attrs="{'invisible':[('cheque_type','=','outgoing')]}"/>
+                            <field name="beneficiary_of_the_check"/>
+                            <field name="drawn_bank" attrs="{'invisible':[('cheque_type','=','outgoing')]}"/>
+                            <field name="check_back" attrs="{'invisible':[('cheque_type','=','outgoing')]}"/>
+                            <field name="back_person_name" attrs="{'invisible':['|',('check_back','=',False),('state','!=','send_to_bank')]}"/>
+                        </group>
+                        <group>
+                            <field name="cheque_received_date" attrs="{'invisible':['|',('state','=','draft'),('state','=','cancel')]}"/>
+                            <field name="cheque_send_date" attrs="{'invisible':['|','|',('state','in',['draft','confirm','cancel']),('cheque_type','=','outgoing'),('cheque_send_date','=',False)]}"/>
+                            <field name="deposit_date" attrs="{'invisible':[('state','!=','deposit')]}"/>
+                            <field name="return_from_partner_date" attrs="{'invisible':['|','|',('state','in',['draft','confirm','send_to_bank','deposit','bounced','cancel']),('cheque_type','=','incoming'),('return_from_partner_date','=',False)]}"/>
+                        </group>
+                        <group>
+                            <field name="bounced_date" attrs="{'invisible':['|',('state','in',['draft','confirm','send_to_bank','deposit','cancel']),('bounced_date','=',False)]}"/>
+                            <field name="cash_date" attrs="{'invisible':['|',('state','!=','cashed'),('state','=','cancel')]}"/>
+                            <field name="return_to_partner_date" attrs="{'invisible':['|','|',('state','in',['draft','confirm','send_to_bank','deposit','bounced','cancel']),('cheque_type','=','outgoing'),('return_to_partner_date','=',False)]}"/>
+                        </group>
+                    </group>
+                    <group>
+                        <h3 attrs="{'invisible':[('cheque_type','=','outgoing')]}">Invoices /To Reconcile</h3>
+                        <h3 attrs="{'invisible':[('cheque_type','=','incoming')]}">Bill /To Reconcile</h3>
+                    </group>
+                    <group>
+                        <field name="move_ids" nolabel="1" domain="[('move_type', '=', move_type),('partner_id', '=', partner_id)]">
+                            <tree string="Attachments">
+                                <field name="invoice_partner_display_name" string="Customer/Vendor"/>
+                                <field name="name" string="Invoice Number"/>
+                                <field name="invoice_date"/>
+                                <field name="payment_reference"/>
+                                <field name="amount_total"/>
+                                <field name="amount_residual"/>
+                                <field name="state"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="cheque_management_tree" model="ir.ui.view">
+        <field name="name">cheque.management.tree</field>
+        <field name="model">cheque.management</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="description"/>
+                <field name="partner_type" optional="show"/>
+                <field name="partner_id"/>
+                <field name="employee_id" optional="show"/>
+                <field name="bank_account_id" optional="show"/>
+                <field name="collected_by_another_bank_treasury" optional="show"/>
+                <field name="cheque_number" optional="show"/>
+                <field name="check_due_date" optional="show"/>
+                <field name="cheque_received_date" optional="show"/>
+                <field name="hand_me_the_check" optional="hide"/>
+                <field name="beneficiary_of_the_check" optional="hide"/>
+                <field name="drawn_bank" optional="hide"/>
+                <field name="check_back" optional="hide"/>
+                <field name="back_person_name" optional="hide"/>
+                <field name="currency_id" optional="show"/>
+                <field name="currency_amount"/>
+                <field name="amount" invisible="1"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+    <!--Incoming Action -->
+    <record id="action_cheque_management_incoming" model="ir.actions.act_window">
+        <field name="name">Incoming Cheque</field>
+        <field name="res_model">cheque.management</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('cheque_type', '=', 'incoming')]</field>
+        <field name="context">{'default_cheque_type': 'incoming', 'default_move_type': 'out_invoice'}</field>
+        <field name="view_id" ref="cheque_management.cheque_management_tree"/>
+    </record>
+    <!--Outgoing Action -->
+    <record id="action_cheque_management_outgoing" model="ir.actions.act_window">
+        <field name="name">Outgoing Cheque</field>
+        <field name="res_model">cheque.management</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="domain">[('cheque_type', '=', 'outgoing')]</field>
+        <field name="context">{'default_cheque_type': 'outgoing'}</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="cheque_management.cheque_management_tree"/>
+    </record>
+
+    <!--Cheque Menuitem-->
+    <menuitem id='main_menu_incoming_cheque_management' name='Cheque Management' parent='account_accountant.menu_accounting' sequence="4"/>
+    <menuitem id='menu_incoming_cheque_management' name='Incoming Cheque' parent='main_menu_incoming_cheque_management' action='action_cheque_management_incoming'/>
+    <menuitem id='menu_outgoing_cheque_management' name='Outgoing Cheque' parent='main_menu_incoming_cheque_management' action='action_cheque_management_outgoing'/>
+    <record id="account.menu_finance_entries" model="ir.ui.menu">
+        <field name="sequence">5</field>
+    </record>
+</odoo>
