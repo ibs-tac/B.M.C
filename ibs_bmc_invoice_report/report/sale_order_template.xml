@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//p[@id='fiscal_position_remark']" position="after">
+            <table class="table table-borderless">
+                <tbody>
+
+                    <tr>
+
+
+                        <td>
+                            <strong>
+                                Sales Executive:
+                            </strong>
+
+                            <br/>
+                            <span t-field="doc.sales_executive"/>
+                        </td>
+
+                        <td>
+                        </td>
+                        <td>
+                        </td>
+                        <td>
+                            <strong>
+                                Sales Manager:
+                            </strong>
+
+                            <br/>
+                            <span t-field="doc.sales_manager"/>
+                        </td>
+
+                    </tr>
+
+                </tbody>
+            </table>
+        </xpath>
+<!--        <xpath expr="//td[@name='td_name']" position="replace">-->
+<!--            <td name="td_name"><span t-esc="line.get_description()"/></td>-->
+<!--        </xpath>-->
+    </template>
+
+</odoo>
