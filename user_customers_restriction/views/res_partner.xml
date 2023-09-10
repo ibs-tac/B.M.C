@@ -8,9 +8,12 @@
         <field name="arch" type="xml">
             <xpath expr="//sheet" position="before">
                 <header>
-                    <button name="%(user_customers_restriction.restrict_contact_users_action)d" type="action"
+                    <button name="user_restricted" type="object"
                             string="Customers Restriction" class="oe_highlight"
                             groups="user_customers_restriction.assign_users"/>
+
+
+
 
                 </header>
 

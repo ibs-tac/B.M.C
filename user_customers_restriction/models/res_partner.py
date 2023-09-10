@@ -9,20 +9,17 @@ class ResPartner(models.Model):
 
 
 
-    # def user_restricted(self):
-    #     """ User Restricted """
-    #     users=self.env['res.users'].search([])
-    #     for rec in users:
-    #
-    #
-    #     action = \
-    #         self.env.ref('ibs_construction.advance_payments_action').sudo().read()[
-    #             0]
-    #     # action['views'] = [
-    #     #     (self.env.ref('ibs_construction.subcontractors_cycle_form').id,
-    #     #      'form')]
-    #     action['context'] = {'default_partner_id': self.partner_id.id}
-    #
-    #     return action
+    def user_restricted(self):
+        """ User Restricted """
+
+        action = \
+            self.env.ref('user_customers_restriction.restrict_contact_users_action').sudo().read()[
+                0]
+        # action['views'] = [
+        #     (self.env.ref('ibs_construction.subcontractors_cycle_form').id,
+        #      'form')]
+        # action['context'] = {'default_partner_id': self.partner_id.id}
+
+        return action
 
 
