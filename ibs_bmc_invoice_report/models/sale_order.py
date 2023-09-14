@@ -17,4 +17,4 @@ class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
     pregnancy = fields.Char()
-    weight = fields.Char()
+    weight = fields.Char(string="Color")
