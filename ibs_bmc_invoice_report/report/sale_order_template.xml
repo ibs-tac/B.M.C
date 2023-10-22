@@ -36,7 +36,7 @@
             </table>
         </xpath>
         <xpath expr="//th[@name='th_quantity']" position="replace">
-            <th name="th_pregnancy" class="text-left">Pregnancy</th>
+            <th name="th_pregnancy" class="text-left">Load</th>
             <th name="th_weight" class="text-left">Color</th>
         </xpath>
         <xpath expr="//td[@name='td_quantity']" position="replace">
