@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="prt_users_form" model="ir.ui.view">
+        <field name="name">prt.users.form</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//page[@name="access_rights"]/group' position='before'>
+                <group name="contact_restrict" string="Contact Access">
+                    <field name="user_restricted_ids" widget="many2many_tags"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_users_form_restrict" model="ir.ui.view">
+        <field name="name">re_s.users.form</field>
+        <field name="model">res.users</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group/>
+                    </group>
+                    <group name="contact_restrict" string="Contact Access">
+                        <field name="user_restricted_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_users_action_restrict" model="ir.actions.act_window">
+        <field name="name">Res Users</field>
+        <field name="res_model">res.users</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="user_customers_restriction.res_users_form_restrict"/>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Res Users
+            </p>
+        </field>
+
+    </record>
+
+    <menuitem id="contact_restrict_menu"
+              name="Contact Restrict"
+              action="res_users_action_restrict"
+              parent="account_accountant.menu_accounting"
+              sequence="4"/>
+</odoo>

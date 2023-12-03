@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ibs_mobile_unique_ibs_mobile_unique,ibs_mobile_unique.ibs_mobile_unique,model_ibs_mobile_unique_ibs_mobile_unique,base.group_user,1,1,1,1

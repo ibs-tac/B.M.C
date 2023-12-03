@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+
+access4_res_partner_group_account,res_partner,base.model_res_partner,user_customers_restriction.contact_users,1,1,1,0
+access4_restrict_contact_users,restrict_contact_users,model_restrict_contact_users,base.group_user,1,1,1,1

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="restrict_contact_users_form" model="ir.ui.view">
+        <field name="name">restrict.contact.users.form</field>
+        <field name="model">restrict.contact.users</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="res_users_ids" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+                <footer>
+                    <button name="confirm" type="object" string="Confirm" class="oe_highlight" />
+                    <button string="Cancel" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window id="restrict_contact_users_action"
+                name="Restrict Contact Users"
+                res_model="restrict.contact.users"
+                view_mode="form"
+                target="new"
+
+    />
+
+</odoo>
