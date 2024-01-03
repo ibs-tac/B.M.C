@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <template id="report_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//t[@t-set='address']/div" position="attributes">
+            <attribute name="style">font-size:20px</attribute>
+        </xpath>
         <xpath expr="//p[@id='fiscal_position_remark']" position="after">
             <table class="table table-borderless">
                 <tbody>
-
                     <tr>
-
-
-                        <td>
+                        <td class="text-center" width="30%">
                             <strong>
                                 Sales Executive:
                             </strong>
-
                             <br/>
-                            <span t-field="doc.sales_executive"/>
+                            <span t-field="doc.sales_executive_id.name"/>
                         </td>
-
-                        <td>
-                        </td>
-                        <td>
+                        <td class="text-center" width="40%">
+                            <img src="/ibs_bmc_invoice_report/static/description/validation.png" style="max-height:80px;" alt="Logo"/>
                         </td>
                         <td>
+                        </td>
+                        <td class="text-center" width="30%">
                             <strong>
                                 Sales Manager:
                             </strong>
-
                             <br/>
                             <span t-field="doc.sales_manager"/>
                         </td>
-
                     </tr>
-
                 </tbody>
             </table>
         </xpath>
         <xpath expr="//th[@name='th_quantity']" position="replace">
-            <th name="th_pregnancy" class="text-left">Load</th>
+            <th name="th_load" class="text-left">Load</th>
             <th name="th_weight" class="text-left">Color</th>
         </xpath>
         <xpath expr="//td[@name='td_quantity']" position="replace">
-            <td name="pregnancy" class="text-left"><span t-field="line.pregnancy"/></td>
+            <td name="load" class="text-left"><span t-field="line.load"/></td>
             <td name="weight" class="text-left"><span t-field="line.weight"/></td>
         </xpath>
 
-<!--        <xpath expr="//td[@name='td_name']" position="replace">-->
-<!--            <td name="td_name"><span t-esc="line.get_description()"/></td>-->
-<!--        </xpath>-->
+        <!--        <xpath expr="//td[@name='td_name']" position="replace">-->
+        <!--            <td name="td_name"><span t-esc="line.get_description()"/></td>-->
+        <!--        </xpath>-->
     </template>
 
 </odoo>
