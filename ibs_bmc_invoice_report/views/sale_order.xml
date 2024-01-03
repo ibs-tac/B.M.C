@@ -8,7 +8,7 @@
             <xpath expr="//group[@name='note_group']" position="after">
                 <group>
                     <group>
-                        <field name="sales_executive"/>
+                        <field name="sales_executive_id"/>
                     </group>
                     <group>
                         <field name="sales_manager"/>
@@ -18,8 +18,12 @@
             </xpath>
 
             <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="after">
-                <field name="pregnancy"/>
+                <field name="load"/>
                 <field name="weight"/>
+            </xpath>
+            <xpath expr="//button[@name='action_quotation_send']" position="before">
+                <button name="send_whatsapp" string="Send WhatsApp" type="object" states="draft" class="oe_highlight"/>
+                <button name="send_whatsapp" string="Send WhatsApp" type="object" states="sent,sale"/>
             </xpath>
         </field>
     </record>
