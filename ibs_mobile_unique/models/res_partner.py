@@ -21,6 +21,19 @@ class ResPartner(models.Model):
                         _(
                             'This mobile number  %s is with one of the clients' % rec.mobile))
 
+    @api.constrains('phone')
+    def _check_phone(self):
+        """ Validate phone """
+        for rec in self:
+            if rec.phone:
+                record = self.env['res.partner'].search(
+                    [('phone', '=', rec.phone), ('id', '!=', rec.id)],
+                    limit=1)
+                if record:
+                    raise ValidationError(
+                        _(
+                            'This phone number  %s is with one of the clients' % rec.phone))
+
     @api.constrains('name')
     def _check_name(self):
         """ Validate name """
