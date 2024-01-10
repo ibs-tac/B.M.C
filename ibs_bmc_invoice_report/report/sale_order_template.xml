@@ -13,10 +13,15 @@
                                 Sales Executive:
                             </strong>
                             <br/>
-                            <span t-field="doc.sales_executive_id.name"/>
+                            <t t-if="doc.sales_executive_id">
+                                <span t-field="doc.sales_executive_id.name"/>
+                            </t>
+                            <t t-else="">
+                                <span t-field="env.user.name"/>
+                            </t>
                         </td>
                         <td class="text-center" width="40%">
-                            <img src="/ibs_bmc_invoice_report/static/description/validation.png" style="max-height:80px;" alt="Logo"/>
+<!--                            <img src="/ibs_bmc_invoice_report/static/description/validation.png" style="max-height:80px;" alt="Logo"/>-->
                         </td>
                         <td>
                         </td>
@@ -31,11 +36,11 @@
                 </tbody>
             </table>
         </xpath>
-        <xpath expr="//th[@name='th_quantity']" position="replace">
+        <xpath expr="//th[@name='th_quantity']" position="after">
             <th name="th_load" class="text-left">Load</th>
             <th name="th_weight" class="text-left">Color</th>
         </xpath>
-        <xpath expr="//td[@name='td_quantity']" position="replace">
+        <xpath expr="//td[@name='td_quantity']" position="after">
             <td name="load" class="text-left"><span t-field="line.load"/></td>
             <td name="weight" class="text-left"><span t-field="line.weight"/></td>
         </xpath>
