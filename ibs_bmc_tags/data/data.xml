@@ -1,0 +1,8 @@
+<odoo>
+    <data noupdate="1">
+        <record id ="tag_record" model="res.partner.category">
+            <field name="name">مصرية</field>
+            <field name="active">True</field>
+        </record>
+    </data>
+</odoo>
